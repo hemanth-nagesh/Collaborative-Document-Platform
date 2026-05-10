@@ -1,13 +1,14 @@
 from django.db import migrations
 
 
-def _existing_columns(schema_editor, table_name: str) -> set[str]:
-    with schema_editor.connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT column_name FROM information_schema.columns WHERE table_name = %s",
-            [table_name],
-        )
-        return {row[0] for row in cursor.fetchall()}
+def _existing_columns(schema_editor, table_name: str):
+    connection = schema_editor.connection
+    if table_name not in connection.introspection.table_names():
+        return set()
+
+    with connection.cursor() as cursor:
+        description = connection.introspection.get_table_description(cursor, table_name)
+    return {col.name for col in description}
 
 
 def _add_field_if_missing(model, field_name: str, schema_editor):
