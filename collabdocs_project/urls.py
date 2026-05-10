@@ -22,4 +22,7 @@ urlpatterns = [
     path('api/users/', include('apps.users.urls')),
     path('api/workspaces/', include('apps.workspaces.urls')),
     path('api/documents/', include('apps.documents.urls')),
+    path('api/comments/', include('apps.comments.urls')),
+    path('api/tags/', include('apps.tags.urls')),
+    path('api/audit-logs/', include('apps.audit.urls')),
 ]

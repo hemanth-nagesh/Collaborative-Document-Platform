@@ -1,16 +1,23 @@
-from django.shortcuts import render
+from django.http import Http404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from django.db import transaction, IntegrityError
 from django.db.models import Count
 
 from apps.workspaces.serializers import WorkspaceSerializer, WorkspaceMemberSerializer
-from .models import Workspace, WorkspaceMember
+from .models import Workspace, WorkspaceMember, WorkspaceRole
 
 class WorkspaceViewSet(viewsets.ModelViewSet):
-    queryset = Workspace.objects.all()
+    queryset = Workspace.objects.select_related('owner').all()
     serializer_class = WorkspaceSerializer
+
+    def get_object(self):
+        try:
+            return super().get_object()
+        except Http404:
+            raise NotFound(detail='Workspace not found.')
 
     # 1.5 POST /api/workspaces/ – atomic: create + add owner as admin
     @transaction.atomic
@@ -23,7 +30,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         WorkspaceMember.objects.create(
             workspace=workspace,
             user=workspace.owner,
-            role='admin'
+            role=WorkspaceRole.ADMIN
         )
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -31,9 +38,14 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
     # 1.6 GET /api/workspaces/{id}/ – annotate member count
     def retrieve(self, request, *args, **kwargs):
         # Override retrieve to annotate member count safely
-        workspace = Workspace.objects.annotate(member_count=Count('members')).filter(pk=kwargs.get('pk')).first()
+        workspace = (
+            Workspace.objects.select_related('owner')
+            .annotate(member_count=Count('members'))
+            .filter(pk=kwargs.get('pk'))
+            .first()
+        )
         if not workspace:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Workspace not found.'}, status=status.HTTP_404_NOT_FOUND)
         serializer = self.get_serializer(workspace)
         data = serializer.data
         data['member_count'] = workspace.member_count
@@ -44,7 +56,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
     def members(self, request, pk=None):
         workspace = self.get_object()
         user_id = request.data.get('user')
-        role = request.data.get('role', 'viewer')
+        role = request.data.get('role', WorkspaceRole.VIEWER)
         if not user_id:
             return Response({"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -71,25 +83,18 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def summary(self, request, pk=None):
         workspace = Workspace.objects.filter(pk=pk).annotate(
-            member_count=Count('members', distinct=True)
+            member_count=Count('members', distinct=True),
+            document_count=Count('documents', distinct=True),
+            comment_count=Count('documents__comments', distinct=True),
         ).first()
 
         if not workspace:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        # Fallbacks to 0 since doc/comment app models might not be fully linked via related_names yet.
-        doc_count = getattr(workspace, 'document_count', 0)
-        comment_count = getattr(workspace, 'comment_count', 0)
-
-        try:
-            doc_count = workspace.documents.count()
-        except AttributeError:
-            pass # Relations not built yet in PDF step 1.
+            return Response({'error': 'Workspace not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         return Response({
             "workspace_id": workspace.id,
             "name": workspace.name,
             "member_count": workspace.member_count,
-            "document_count": doc_count,
-            "comment_count": comment_count
+            "document_count": workspace.document_count,
+            "comment_count": workspace.comment_count,
         })

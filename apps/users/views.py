@@ -1,4 +1,6 @@
+from django.http import Http404
 from rest_framework import viewsets, status
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from .models import User
 from .serializers import UserSerializer
@@ -6,6 +8,12 @@ from .serializers import UserSerializer
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_object(self):
+        try:
+            return super().get_object()
+        except Http404:
+            raise NotFound(detail='User not found.')
 
     # POST /api/users/
     def create(self, request, *args, **kwargs):

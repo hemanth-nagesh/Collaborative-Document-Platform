@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from .models import Workspace, WorkspaceMember, role_choices
+from .models import Workspace, WorkspaceMember, WorkspaceRole
 
 class WorkspaceSerializer(serializers.ModelSerializer):
     
@@ -19,7 +19,7 @@ class WorkspaceSerializer(serializers.ModelSerializer):
 
 class WorkspaceMemberSerializer(serializers.ModelSerializer):
     # Ensure role falls within the valid choices explicitly, in case the model's models.Choices isn't correctly enforced
-    role = serializers.ChoiceField(choices=role_choices)
+    role = serializers.ChoiceField(choices=WorkspaceRole.choices)
 
     class Meta:
         model = WorkspaceMember

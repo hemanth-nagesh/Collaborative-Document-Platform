@@ -1,7 +1,9 @@
 from django.db import transaction
 from django.db.models import Count, Q
+from django.http import Http404
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
 from apps.audit.models import AuditLog
@@ -17,6 +19,12 @@ from .serializers import (
 class DocumentViewSet(viewsets.ModelViewSet):
     serializer_class = DocumentSerializer
     queryset = Document.objects.select_related('workspace', 'created_by').prefetch_related('tags')
+
+    def get_object(self):
+        try:
+            return super().get_object()
+        except Http404:
+            raise NotFound(detail='Document not found.')
 
     def get_queryset(self):
         queryset = (

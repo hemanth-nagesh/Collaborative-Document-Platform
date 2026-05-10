@@ -1,0 +1,737 @@
+{
+  "info": {
+    "_postman_id": "9f9d3e2e-6b3a-4a1e-9c1e-1f7b9d0f1e11",
+    "name": "Collaborative-Document-Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "base_url", "value": "http://localhost:8000"},
+    {"key": "user_id", "value": ""},
+    {"key": "workspace_id", "value": ""},
+    {"key": "document_id", "value": ""},
+    {"key": "tag_id", "value": ""},
+    {"key": "member_id", "value": ""},
+    {"key": "version_id_1", "value": ""},
+    {"key": "version_id_2", "value": ""},
+    {"key": "comment_id", "value": ""},
+    {"key": "audit_id", "value": ""}
+  ],
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create user",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/users/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Doe\",\n  \"email\": \"jane.doe@example.com\",\n  \"phone\": \"+15551234567\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/users/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Doe\",\n  \"email\": \"jane.doe@example.com\",\n  \"phone\": \"+15551234567\"\n}"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"id\": \"{{user_id}}\",\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Doe\",\n  \"email\": \"jane.doe@example.com\",\n  \"phone\": \"+15551234567\",\n  \"created_at\": \"2026-05-10T12:00:00Z\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/users/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"first_name\": \"\",\n  \"last_name\": \"Doe\",\n  \"email\": \"not-an-email\",\n  \"phone\": \"123\"\n}"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"first_name\": [\"First name cannot be blank.\"],\n  \"email\": [\"Enter a valid email address.\"],\n  \"phone\": [\"Phone must be 10–15 digits (optional leading +).\"]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get user",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/users/{{user_id}}/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/users/{{user_id}}/"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"id\": \"{{user_id}}\",\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Doe\",\n  \"email\": \"jane.doe@example.com\",\n  \"phone\": \"+15551234567\",\n  \"created_at\": \"2026-05-10T12:00:00Z\"\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/users/{{user_id}}/"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"detail\": \"User not found.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Workspaces",
+      "item": [
+        {
+          "name": "Create workspace",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/workspaces/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Team Workspace\",\n  \"owner\": \"{{user_id}}\",\n  \"is_active\": true\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/workspaces/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Team Workspace\",\n  \"owner\": \"{{user_id}}\",\n  \"is_active\": true\n}"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"id\": \"{{workspace_id}}\",\n  \"name\": \"Team Workspace\",\n  \"owner\": \"{{user_id}}\",\n  \"is_active\": true,\n  \"created_at\": \"2026-05-10T12:05:00Z\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/workspaces/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"A\",\n  \"owner\": \"{{user_id}}\",\n  \"is_active\": true\n}"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"name\": [\"Workspace name must be at least 3 characters long.\"]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get workspace",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/workspaces/{{workspace_id}}/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/workspaces/{{workspace_id}}/"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"id\": \"{{workspace_id}}\",\n  \"name\": \"Team Workspace\",\n  \"owner\": \"{{user_id}}\",\n  \"is_active\": true,\n  \"created_at\": \"2026-05-10T12:05:00Z\",\n  \"member_count\": 1\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/workspaces/{{workspace_id}}/"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Workspace not found.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Add member",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/workspaces/{{workspace_id}}/members/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": \"{{user_id}}\",\n  \"role\": \"viewer\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/workspaces/{{workspace_id}}/members/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": \"{{user_id}}\",\n  \"role\": \"viewer\"\n}"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"id\": \"{{member_id}}\",\n  \"workspace\": \"{{workspace_id}}\",\n  \"user\": \"{{user_id}}\",\n  \"role\": \"viewer\",\n  \"joined_at\": \"2026-05-10T12:06:00Z\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/workspaces/{{workspace_id}}/members/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"role\": \"viewer\"\n}"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"User ID is required\"\n}"
+            },
+            {
+              "name": "409 Conflict",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/workspaces/{{workspace_id}}/members/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": \"{{user_id}}\",\n  \"role\": \"viewer\"\n}"
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"User is already a member of this workspace.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "List members",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/workspaces/{{workspace_id}}/members/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/workspaces/{{workspace_id}}/members/"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "[\n  {\n    \"id\": \"{{member_id}}\",\n    \"workspace\": \"{{workspace_id}}\",\n    \"user\": \"{{user_id}}\",\n    \"role\": \"viewer\",\n    \"joined_at\": \"2026-05-10T12:06:00Z\"\n  }\n]"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/workspaces/{{workspace_id}}/members/"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"detail\": \"Workspace not found.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Workspace summary",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/workspaces/{{workspace_id}}/summary/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/workspaces/{{workspace_id}}/summary/"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"workspace_id\": \"{{workspace_id}}\",\n  \"name\": \"Team Workspace\",\n  \"member_count\": 1,\n  \"document_count\": 1,\n  \"comment_count\": 1\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/workspaces/{{workspace_id}}/summary/"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Workspace not found.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "Create document",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/documents/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Project Plan\",\n  \"content\": \"Initial content\",\n  \"workspace\": \"{{workspace_id}}\",\n  \"created_by\": \"{{user_id}}\",\n  \"status\": \"draft\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/documents/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Project Plan\",\n  \"content\": \"Initial content\",\n  \"workspace\": \"{{workspace_id}}\",\n  \"created_by\": \"{{user_id}}\",\n  \"status\": \"draft\"\n}"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"id\": \"{{document_id}}\",\n  \"title\": \"Project Plan\",\n  \"content\": \"Initial content\",\n  \"workspace\": \"{{workspace_id}}\",\n  \"created_by\": \"{{user_id}}\",\n  \"status\": \"draft\",\n  \"tags\": [],\n  \"tag_names\": [],\n  \"version_count\": 1,\n  \"updated_at\": \"2026-05-10T12:10:00Z\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/documents/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Project Plan\",\n  \"content\": \"\",\n  \"workspace\": \"{{workspace_id}}\",\n  \"created_by\": \"{{user_id}}\",\n  \"status\": \"draft\"\n}"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"content\": \"Document content cannot be empty.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update document",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/documents/{{document_id}}/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Project Plan v2\",\n  \"content\": \"Updated content\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PUT",
+                "url": "{{base_url}}/api/documents/{{document_id}}/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Project Plan v2\",\n  \"content\": \"Updated content\"\n}"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"id\": \"{{document_id}}\",\n  \"title\": \"Project Plan v2\",\n  \"content\": \"Updated content\",\n  \"workspace\": \"{{workspace_id}}\",\n  \"created_by\": \"{{user_id}}\",\n  \"status\": \"draft\",\n  \"tags\": [],\n  \"tag_names\": [],\n  \"version_count\": 2,\n  \"updated_at\": \"2026-05-10T12:12:00Z\"\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "PUT",
+                "url": "{{base_url}}/api/documents/{{document_id}}/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Project Plan v2\",\n  \"content\": \"Updated content\"\n}"
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"detail\": \"Document not found.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "List documents",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/documents/?workspace={{workspace_id}}&status=draft&tag=example&q=plan"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/documents/?workspace={{workspace_id}}&status=draft&tag=example&q=plan"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "[\n  {\n    \"id\": \"{{document_id}}\",\n    \"title\": \"Project Plan v2\",\n    \"content\": \"Updated content\",\n    \"workspace\": \"{{workspace_id}}\",\n    \"created_by\": \"{{user_id}}\",\n    \"status\": \"draft\",\n    \"tags\": [\"{{tag_id}}\"],\n    \"tag_names\": [\"example\"],\n    \"version_count\": 2,\n    \"updated_at\": \"2026-05-10T12:12:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Document versions",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/documents/{{document_id}}/versions/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/documents/{{document_id}}/versions/"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "[\n  {\n    \"id\": \"{{version_id_1}}\",\n    \"document\": \"{{document_id}}\",\n    \"content\": \"Initial content\",\n    \"version_number\": 1,\n    \"saved_by\": \"{{user_id}}\",\n    \"saved_at\": \"2026-05-10T12:10:00Z\"\n  },\n  {\n    \"id\": \"{{version_id_2}}\",\n    \"document\": \"{{document_id}}\",\n    \"content\": \"Updated content\",\n    \"version_number\": 2,\n    \"saved_by\": \"{{user_id}}\",\n    \"saved_at\": \"2026-05-10T12:12:00Z\"\n  }\n]"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/documents/{{document_id}}/versions/"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"detail\": \"Document not found.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Document stats",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/documents/{{document_id}}/stats/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/documents/{{document_id}}/stats/"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"document_id\": \"{{document_id}}\",\n  \"version_count\": 2,\n  \"comment_count\": 1,\n  \"contributor_count\": 1\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/documents/{{document_id}}/stats/"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"detail\": \"Document not found.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Add tags to document",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/documents/{{document_id}}/tags/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tag_ids\": [\"{{tag_id}}\"]\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/documents/{{document_id}}/tags/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"tag_ids\": [\"{{tag_id}}\"]\n}"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"message\": \"Tags added successfully.\",\n  \"added_count\": 1,\n  \"document\": {\n    \"id\": \"{{document_id}}\",\n    \"title\": \"Project Plan v2\",\n    \"content\": \"Updated content\",\n    \"workspace\": \"{{workspace_id}}\",\n    \"created_by\": \"{{user_id}}\",\n    \"status\": \"draft\",\n    \"tags\": [\"{{tag_id}}\"],\n    \"tag_names\": [\"example\"],\n    \"version_count\": 2,\n    \"updated_at\": \"2026-05-10T12:12:00Z\"\n  }\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/documents/{{document_id}}/tags/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"tag_ids\": [\"00000000-0000-0000-0000-000000000000\"]\n}"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"tag_ids\": [\"Tag(s) not found: 00000000-0000-0000-0000-000000000000\"]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "Create comment",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/comments/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document\": \"{{document_id}}\",\n  \"author\": \"{{user_id}}\",\n  \"content\": \"Looks good to me\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/comments/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"document\": \"{{document_id}}\",\n  \"author\": \"{{user_id}}\",\n  \"content\": \"Looks good to me\"\n}"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"id\": \"{{comment_id}}\",\n  \"document\": \"{{document_id}}\",\n  \"author\": \"{{user_id}}\",\n  \"parent\": null,\n  \"content\": \"Looks good to me\",\n  \"created_at\": \"2026-05-10T12:15:00Z\",\n  \"updated_at\": \"2026-05-10T12:15:00Z\",\n  \"children\": []\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/comments/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"document\": \"{{document_id}}\",\n  \"author\": \"{{user_id}}\",\n  \"content\": \"\"\n}"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"content\": [\"Content cannot be blank.\"]\n}"
+            }
+          ]
+        },
+        {
+          "name": "List comments by document",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/comments/?document={{document_id}}"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/comments/?document={{document_id}}"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "[\n  {\n    \"id\": \"{{comment_id}}\",\n    \"document\": \"{{document_id}}\",\n    \"author\": \"{{user_id}}\",\n    \"parent\": null,\n    \"content\": \"Looks good to me\",\n    \"created_at\": \"2026-05-10T12:15:00Z\",\n    \"updated_at\": \"2026-05-10T12:15:00Z\",\n    \"children\": []\n  }\n]"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/comments/"
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"document query param is required.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tags",
+      "item": [
+        {
+          "name": "Create tag",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/tags/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"example\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/tags/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"example\"\n}"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"id\": \"{{tag_id}}\",\n  \"name\": \"example\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "url": "{{base_url}}/api/tags/",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"example\"\n}"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"name\": [\"Tag with this name already exists.\"]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Audit logs",
+      "item": [
+        {
+          "name": "List audit logs",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/audit-logs/?actor={{user_id}}&date_from=2026-01-01&date_to=2026-12-31"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/audit-logs/?actor={{user_id}}&date_from=2026-01-01&date_to=2026-12-31"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "[\n  {\n    \"id\": \"{{audit_id}}\",\n    \"actor\": \"{{user_id}}\",\n    \"action\": \"created\",\n    \"model_name\": \"Document\",\n    \"object_id\": \"{{document_id}}\",\n    \"timestamp\": \"2026-05-10T12:10:00Z\"\n  }\n]"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "GET",
+                "url": "{{base_url}}/api/audit-logs/?actor={{user_id}}&date_from=bad-date&date_to=2026-12-31"
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"date_from must be YYYY-MM-DD.\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
